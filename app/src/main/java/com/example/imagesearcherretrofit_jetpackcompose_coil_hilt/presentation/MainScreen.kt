@@ -16,17 +16,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.ColorUtils
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.imagesearcherretrofit_jetpackcompose_coil_hilt.util.downloader.AndroidDownloader
 
 @Composable
 fun MainScreen(context: Context, viewModel: MainViewModel = hiltViewModel()) {
-
-
 
     Column(
         Modifier.fillMaxSize()
@@ -46,14 +46,14 @@ fun MainScreen(context: Context, viewModel: MainViewModel = hiltViewModel()) {
 }
 
 @Composable
-fun Init(context: Context, viewModel: MainViewModel= hiltViewModel()) {
+fun Init(context: Context, viewModel: MainViewModel = hiltViewModel()) {
 
     val state = viewModel.state.value
     val error by remember { viewModel.loadError }
 
     val downloader = AndroidDownloader(context)
 
-    if (error.isNotEmpty()){
+    if (error.isNotEmpty()) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -75,25 +75,31 @@ fun Init(context: Context, viewModel: MainViewModel= hiltViewModel()) {
             }
         }
     }
-    
-    LazyColumn{
-        items(state){
+
+    LazyColumn {
+        items(state) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
-                    Column() {
+                    Box {
                         AsyncImage(
                             model = it.url,
                             contentDescription = null,
                             modifier = Modifier
                                 .size(250.dp)
-                                .clip(RoundedCornerShape(4.dp)),
+                                .clip(RoundedCornerShape(6.dp)),
                             contentScale = ContentScale.Crop
                         )
-                        Text(text = it.name, textAlign = TextAlign.Center)
+                        val listOfHashtag = it.name.split(",").sortedBy { it.length }
+
+                        Column(Modifier.align(Alignment.BottomStart).padding(4.dp)) {
+                            Hashtag(text = listOfHashtag[0])
+                            if (listOfHashtag.size >= 2) Hashtag(text = listOfHashtag[1])
+                            if (listOfHashtag.size >= 3) Hashtag(text = listOfHashtag[2])
+                        }
                     }
                     IconButton(
                         modifier = Modifier
@@ -115,5 +121,26 @@ fun Init(context: Context, viewModel: MainViewModel= hiltViewModel()) {
                 Divider(modifier = Modifier.padding(16.dp))
             }
         }
+    }
+}
+
+@Composable
+fun Hashtag(text: String) {
+    Card(
+        modifier = Modifier
+            .padding(start = 4.dp, bottom = 4.dp),
+        backgroundColor = Color(
+            ColorUtils.blendARGB(
+                Color.White.toArgb(),
+                Color.Transparent.toArgb(),
+                .2f
+            )
+        )
+    ) {
+        Text(
+            text = "#$text",
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(horizontal = 2.dp)
+        )
     }
 }
