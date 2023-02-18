@@ -11,7 +11,7 @@
 
 # Previews
 <p align="center">
-<img src="https://github.com/NeredesinFiruze/ImageSearcher_Retrofit-JetpackCompose-Coil-Hilt/tree/main/app/src/main/res/drawable/screenshot.png" width="30%" />
+<img src="https://raw.githubusercontent.com/NeredesinFiruze/ImageSearcher_Retrofit-JetpackCompose-Coil-Hilt/main/app/src/main/res/drawable/screenshot.png" width="30%" />
 </p>
 
 ## Tech Stack
